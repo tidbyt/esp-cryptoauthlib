@@ -91,58 +91,7 @@ ATCA_STATUS hal_i2c_change_baud(ATCAIface iface, uint32_t speed)
  */
 ATCA_STATUS hal_i2c_init(ATCAIface iface, ATCAIfaceCfg *cfg)
 {
-    esp_err_t rc = ESP_FAIL;
-    int bus = cfg->atcai2c.bus;
-
-    if (bus >= 0 && bus < MAX_I2C_BUSES)
-    {
-        if (0 == i2c_hal_data[bus].ref_ct)
-        {
-            i2c_hal_data[bus].ref_ct = 1;
-            i2c_hal_data[bus].conf.mode = I2C_MODE_MASTER;
-            i2c_hal_data[bus].conf.sda_pullup_en = GPIO_PULLUP_DISABLE;
-            i2c_hal_data[bus].conf.scl_pullup_en = GPIO_PULLUP_DISABLE;
-            i2c_hal_data[bus].conf.master.clk_speed = 100000; //cfg->atcai2c.baud;
-
-            switch (bus)
-            {
-            case 0:
-                i2c_hal_data[bus].id = I2C_NUM_0;
-                i2c_hal_data[bus].conf.sda_io_num = I2C0_SDA_PIN;
-                i2c_hal_data[bus].conf.scl_io_num = I2C0_SCL_PIN;
-                break;
-            case 1:
-                i2c_hal_data[bus].id = I2C_NUM_1;
-                i2c_hal_data[bus].conf.sda_io_num = I2C1_SDA_PIN;
-                i2c_hal_data[bus].conf.scl_io_num = I2C1_SCL_PIN;
-                break;
-            default:
-                break;
-            }
-
-//            ESP_LOGI(TAG, "Configuring I2C");
-            rc = i2c_param_config(i2c_hal_data[bus].id, &i2c_hal_data[bus].conf);
-//            ESP_LOGD(TAG, "I2C Param Config: %s", esp_err_to_name(rc));
-            rc = i2c_driver_install(i2c_hal_data[bus].id, I2C_MODE_MASTER, 0, 0, 0);
-//            ESP_LOGD(TAG, "I2C Driver Install; %s", esp_err_to_name(rc));
-        }
-        else
-        {
-            i2c_hal_data[bus].ref_ct++;
-        }
-
-        iface->hal_data = &i2c_hal_data[bus];
-    }
-
-    if (ESP_OK == rc)
-    {
-        return ATCA_SUCCESS;
-    }
-    else
-    {
-        //ESP_LOGE(TAG, "I2C init failed");
-        return ATCA_COMM_FAIL;
-    }
+    return ATCA_SUCCESS;
 }
 
 /** \brief HAL implementation of I2C post init
